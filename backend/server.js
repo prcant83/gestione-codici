@@ -6,6 +6,8 @@ const session = require('express-session');
 const { login } = require('./auth/auth');
 const opzioniRouter = require('./api/opzioni');
 const nuovoProdottoRouter = require('./api/nuovo-prodotto');
+const listaProdottiRouter = require('./api/lista-prodotti');
+
 
 const app = express();
 const PORT = 3000;
@@ -61,6 +63,7 @@ app.get('/logout', (req, res) => {
 // Rotte API
 app.use('/api/opzioni', opzioniRouter);
 app.use('/api/nuovo-prodotto', nuovoProdottoRouter);
+app.use('/api/prodotti', listaProdottiRouter);
 
 // Test API
 app.get('/api/test', (req, res) => {
