@@ -3,6 +3,7 @@ const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
 const { login } = require('./auth/auth');
+const opzioniRouter = require('./api/opzioni'); // <-- aggiunto
 
 const app = express();
 const PORT = 3000;
@@ -46,9 +47,8 @@ app.post('/login', (req, res) => {
       return res.status(401).send('Credenziali non valide');
     }
 
-    // Autenticazione riuscita
     req.session.user = user;
-    res.redirect('/dashboard.html'); // oppure pagina iniziale riservata
+    res.redirect('/dashboard.html');
   });
 });
 
@@ -59,22 +59,25 @@ app.get('/logout', (req, res) => {
   });
 });
 
-// Esempio pagina protetta
+// Pagina protetta
 app.get('/dashboard.html', requireLogin, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dashboard.html'));
 });
+
+// ✅ API per le opzioni selezionabili
+app.use('/api/opzioni', opzioniRouter);
 
 // API test
 app.get('/api/test', (req, res) => {
   res.json({ messaggio: 'API funzionante!' });
 });
 
-// 404 fallback
+// 404
 app.use((req, res) => {
   res.status(404).send('Risorsa non trovata');
 });
 
-// Avvio server
+// Avvio
 app.listen(PORT, () => {
   console.log(`✅ Server attivo su http://localhost:${PORT}`);
 });
