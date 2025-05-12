@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elenco Prodotti</title>
+  <link rel="stylesheet" href="/styles/style.css" />
+</head>
+<body>
+  <header class="header">
+    <h1>Prodotti Inseriti</h1>
+    <nav>
+      <a href="/dashboard.html">&larr; Torna alla Dashboard</a>
+      <a href="/logout">Logout</a>
+    </nav>
+  </header>
+
+  <main class="main">
+    <section class="product-list">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Codice Prodotto</th>
+            <th>Cliente</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody id="tabella-prodotti">
+          <tr><td colspan="4">Caricamento in corso...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2025 Gestione Codici Prodotto</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch('/api/prodotti')
+        .then(res => res.json())
+        .then(prodotti => {
+          const tbody = document.getElementById('tabella-prodotti');
+          tbody.innerHTML = '';
+
+          if (prodotti.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4">Nessun prodotto inserito.</td></tr>';
+            return;
+          }
+
+          prodotti.forEach(p => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${p.id}</td>
+              <td>${p.codice_prodotto}</td>
+              <td>${p.codice_cliente || '-'}</td>
+              <td>${p.data_creazione || '-'}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        })
+        .catch(err => {
+          console.error('Errore caricamento prodotti:', err);
+          document.getElementById('tabella-prodotti').innerHTML = '<tr><td colspan="4">Errore nel caricamento</td></tr>';
+        });
+    });
+  </script>
+</body>
+</html>
