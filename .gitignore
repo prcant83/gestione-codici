@@ -1,0 +1,4 @@
+node_modules/
+*.sqlite
+.env
+pm2.log
