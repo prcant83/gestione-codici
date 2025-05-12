@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuovo Prodotto</title>
+  <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+  <header class="header">
+    <h1>Compilazione Nuovo Prodotto</h1>
+    <nav>
+      <a href="/dashboard.html">&larr; Torna alla Dashboard</a>
+      <a href="/logout">Logout</a>
+    </nav>
+  </header>
+
+  <main class="main">
+    <form action="/api/nuovo-prodotto" method="POST" class="form-box">
+      <h2>Dati Prodotto (compilati da Andrea D'Onofrio)</h2>
+
+      <label for="linea">Linea</label>
+      <input type="text" name="linea" id="linea" required>
+
+      <label for="stabilimento">Stabilimento</label>
+      <input type="text" name="stabilimento" id="stabilimento" required>
+
+      <label for="contenitore">Contenitore</label>
+      <input type="text" name="contenitore" id="contenitore" required>
+
+      <label for="formato">Formato</label>
+      <input type="text" name="formato" id="formato" required>
+
+      <label for="tipologia">Tipologia</label>
+      <input type="text" name="tipologia" id="tipologia" required>
+
+      <label for="confezione">Confezione</label>
+      <input type="text" name="confezione" id="confezione" required>
+
+      <label for="codice_cliente">Codice Cliente (opzionale)</label>
+      <input type="text" name="codice_cliente" id="codice_cliente">
+
+      <button type="submit">Salva Scheda Iniziale</button>
+    </form>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2025 Gestione Codici Prodotto</p>
+  </footer>
+</body>
+</html>
