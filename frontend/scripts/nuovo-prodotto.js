@@ -1,0 +1,1 @@
+scripts/nuovo-prodotto.js
