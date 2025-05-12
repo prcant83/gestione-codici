@@ -20,22 +20,40 @@
       <h2>Dati Prodotto (compilati da Andrea D'Onofrio)</h2>
 
       <label for="linea">Linea</label>
-      <input type="text" name="linea" id="linea" required>
+      <div class="field-with-button">
+        <select name="linea" id="linea" required></select>
+        <button type="button" onclick="aggiungiOpzione('linea')">+</button>
+      </div>
 
       <label for="stabilimento">Stabilimento</label>
-      <input type="text" name="stabilimento" id="stabilimento" required>
+      <div class="field-with-button">
+        <select name="stabilimento" id="stabilimento" required></select>
+        <button type="button" onclick="aggiungiOpzione('stabilimento')">+</button>
+      </div>
 
       <label for="contenitore">Contenitore</label>
-      <input type="text" name="contenitore" id="contenitore" required>
+      <div class="field-with-button">
+        <select name="contenitore" id="contenitore" required></select>
+        <button type="button" onclick="aggiungiOpzione('contenitore')">+</button>
+      </div>
 
       <label for="formato">Formato</label>
-      <input type="text" name="formato" id="formato" required>
+      <div class="field-with-button">
+        <select name="formato" id="formato" required></select>
+        <button type="button" onclick="aggiungiOpzione('formato')">+</button>
+      </div>
 
       <label for="tipologia">Tipologia</label>
-      <input type="text" name="tipologia" id="tipologia" required>
+      <div class="field-with-button">
+        <select name="tipologia" id="tipologia" required></select>
+        <button type="button" onclick="aggiungiOpzione('tipologia')">+</button>
+      </div>
 
       <label for="confezione">Confezione</label>
-      <input type="text" name="confezione" id="confezione" required>
+      <div class="field-with-button">
+        <select name="confezione" id="confezione" required></select>
+        <button type="button" onclick="aggiungiOpzione('confezione')">+</button>
+      </div>
 
       <label for="codice_cliente">Codice Cliente (opzionale)</label>
       <input type="text" name="codice_cliente" id="codice_cliente">
@@ -47,5 +65,7 @@
   <footer class="footer">
     <p>&copy; 2025 Gestione Codici Prodotto</p>
   </footer>
+
+  <script src="/scripts/nuovo-prodotto.js"></script>
 </body>
 </html>
