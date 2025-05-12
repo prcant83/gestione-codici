@@ -18,6 +18,7 @@
   "homepage": "https://github.com/prcant83/gestione-codici#readme",
   "description": "",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^5.1.0"
   }
 }
