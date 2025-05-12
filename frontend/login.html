@@ -1,118 +1,34 @@
-<!-- login.html -->
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login - Gestione Codici Prodotto</title>
-  <link rel="stylesheet" href="styles/login.css">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-
-    .login-container {
-      background-color: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 400px;
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      margin-top: 10px;
-    }
-
-    input[type="text"],
-    input[type="password"] {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 20px;
-      background-color: #0066cc;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    button:hover {
-      background-color: #0055aa;
-    }
-
-    .error {
-      color: red;
-      text-align: center;
-      margin-top: 15px;
-    }
-  </style>
+  <link rel="stylesheet" href="assets/styles/style.css" />
 </head>
 <body>
-  <div class="login-container">
-    <h2>Accesso Utente</h2>
-    <form id="loginForm">
-      <label for="username">Nome utente</label>
-      <input type="text" id="username" name="username" required>
+  <header>
+    <h1>Gestione Codici Prodotto</h1>
+  </header>
+
+  <main class="login-container">
+    <form action="/login" method="POST" class="login-form">
+      <h2>Accesso Utente</h2>
+
+      <label for="username">Username o Email</label>
+      <input type="text" id="username" name="username" required />
 
       <label for="password">Password</label>
-      <input type="password" id="password" name="password" required>
+      <input type="password" id="password" name="password" required />
 
       <button type="submit">Accedi</button>
+
+      <p class="login-note">Accesso riservato ai soli utenti autorizzati</p>
     </form>
-    <div id="loginError" class="error"></div>
-  </div>
+  </main>
 
-  <script>
-    document.getElementById('loginForm').addEventListener('submit', async function(event) {
-      event.preventDefault();
-
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-      const loginError = document.getElementById('loginError');
-
-      try {
-        const response = await fetch('/api/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ username, password })
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-          // Reindirizza alla dashboard con ruolo specifico
-          window.location.href = `/dashboard.html?role=${result.ruolo}`;
-        } else {
-          loginError.textContent = result.message || 'Credenziali non valide';
-        }
-      } catch (err) {
-        console.error(err);
-        loginError.textContent = 'Errore di connessione al server';
-      }
-    });
-  </script>
+  <footer>
+    <p>&copy; 2025 Gestione Codici Prodotto - Tutti i diritti riservati</p>
+  </footer>
 </body>
 </html>
