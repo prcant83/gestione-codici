@@ -6,10 +6,10 @@ const path = require('path');
 const dbPath = path.join(__dirname, '../database/database.sqlite');
 const db = new sqlite3.Database(dbPath);
 
-// Campi validi
+// Campi ammessi
 const tabelleValide = ['linea', 'stabilimento', 'contenitore', 'formato', 'tipologia', 'confezione'];
 
-// Mappa campo -> tabella
+// Mappa logica campo → tabella DB
 const tabellaMap = {
   linea: 'linee',
   stabilimento: 'stabilimenti',
@@ -19,7 +19,7 @@ const tabellaMap = {
   confezione: 'confezioni'
 };
 
-// GET /api/opzioni/:campo
+// ✅ GET /api/opzioni/:campo — Ritorna elenco opzioni per un campo
 router.get('/:campo', (req, res) => {
   const campo = req.params.campo;
   if (!tabelleValide.includes(campo)) return res.status(400).send('Campo non valido');
@@ -31,7 +31,7 @@ router.get('/:campo', (req, res) => {
   });
 });
 
-// POST /api/opzioni/:campo
+// ✅ POST /api/opzioni/:campo — Inserisce nuova opzione con descrizione e codice
 router.post('/:campo', (req, res) => {
   const campo = req.params.campo;
   const { descrizione, codice } = req.body;
@@ -42,7 +42,7 @@ router.post('/:campo', (req, res) => {
   const tabella = tabellaMap[campo];
   const query = `INSERT INTO ${tabella} (descrizione, codice) VALUES (?, ?)`;
 
-  db.run(query, [descrizione, codice], function (err) {
+  db.run(query, [descrizione.trim(), codice.trim()], function (err) {
     if (err) return res.status(500).json({ error: err.message });
     res.json({ id: this.lastID, descrizione });
   });
