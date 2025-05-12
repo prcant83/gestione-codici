@@ -1,0 +1,23 @@
+{
+  "name": "gestione-codici",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prcant83/gestione-codici.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/prcant83/gestione-codici/issues"
+  },
+  "homepage": "https://github.com/prcant83/gestione-codici#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
