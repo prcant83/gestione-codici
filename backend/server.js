@@ -1,8 +1,16 @@
-const http = require('http');
-const server = http.createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('Server Node.js attivo!');
+const express = require('express');
+const path = require('path');
+const app = express();
+const PORT = 3000;
+
+// Serve contenuti statici (CSS, JS, immagini)
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Home page → index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
-server.listen(3000, () => {
-  console.log('Server in ascolto su http://localhost:3000');
+
+app.listen(PORT, () => {
+  console.log(`Server attivo su http://localhost:${PORT}`);
 });
