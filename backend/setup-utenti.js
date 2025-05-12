@@ -13,9 +13,13 @@ const utenti = [
   { username: 'guest', email: 'ospite@azienda.it', password: 'guest123', ruolo: 'viewer' }
 ];
 
-// Percorso DB
-const dbPath = path.resolve(__dirname, 'database/utenti.sqlite');
-const db = new sqlite3.Database(dbPath);
+// Percorso corretto del database esistente
+const dbPath = path.resolve(__dirname, 'db/database.sqlite');
+const db = new sqlite3.Database(dbPath, (err) => {
+  if (err) {
+    return console.error('❌ Errore apertura database:', err.message);
+  }
+});
 
 // Crea tabella e inserisce utenti
 db.serialize(() => {
@@ -28,19 +32,27 @@ db.serialize(() => {
       password_hash TEXT NOT NULL,
       ruolo TEXT NOT NULL
     )
-  `);
+  `, (err) => {
+    if (err) return console.error('❌ Errore creazione tabella:', err.message);
 
-  const stmt = db.prepare(`INSERT INTO utenti (username, email, password_hash, ruolo) VALUES (?, ?, ?, ?)`);
+    const stmt = db.prepare(`INSERT INTO utenti (username, email, password_hash, ruolo) VALUES (?, ?, ?, ?)`);
 
-  utenti.forEach(utente => {
-    bcrypt.hash(utente.password, 10, (err, hash) => {
-      if (err) return console.error('Errore hash:', err);
-      stmt.run(utente.username, utente.email, hash, utente.ruolo);
+    let inseriti = 0;
+
+    utenti.forEach((utente, index) => {
+      bcrypt.hash(utente.password, 10, (err, hash) => {
+        if (err) return console.error('❌ Errore hash:', err.message);
+        stmt.run(utente.username, utente.email, hash, utente.ruolo, (err) => {
+          if (err) console.error(`⚠️ Errore inserimento ${utente.username}:`, err.message);
+          inseriti++;
+          if (inseriti === utenti.length) {
+            stmt.finalize(() => {
+              console.log('✅ Utenti creati con successo nel database.');
+              db.close();
+            });
+          }
+        });
+      });
     });
-  });
-
-  stmt.finalize(() => {
-    console.log('✅ Utenti creati con successo nel database.');
-    db.close();
   });
 });
