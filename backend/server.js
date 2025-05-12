@@ -2,8 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
+
 const { login } = require('./auth/auth');
-const opzioniRouter = require('./api/opzioni'); // <-- aggiunto
+const opzioniRouter = require('./api/opzioni');
+const nuovoProdottoRouter = require('./api/nuovo-prodotto'); // <-- nuova rotta
 
 const app = express();
 const PORT = 3000;
@@ -64,8 +66,9 @@ app.get('/dashboard.html', requireLogin, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dashboard.html'));
 });
 
-// ✅ API per le opzioni selezionabili
+// ✅ API disponibili
 app.use('/api/opzioni', opzioniRouter);
+app.use('/api/nuovo-prodotto', nuovoProdottoRouter);
 
 // API test
 app.get('/api/test', (req, res) => {
