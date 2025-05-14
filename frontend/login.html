@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -7,12 +8,13 @@
   <link rel="stylesheet" href="styles/style.css" />
 </head>
 <body>
-  <!-- Modulo header caricato dinamicamente -->
-  <div id="header"></div>
+  <header class="header">
+    <h1>Gestione Codici Prodotto</h1>
+  </header>
 
   <main class="main login-page">
     <section class="form-container">
-      <form id="loginForm" class="form-box">
+      <form action="/login" method="POST" class="form-box">
         <h2>Accesso Utente</h2>
 
         <label for="username">Username o Email</label>
@@ -23,15 +25,14 @@
 
         <button type="submit">Accedi</button>
         <p class="form-note">Accesso riservato ai soli utenti autorizzati</p>
-        <p id="login-error" class="form-error"></p>
       </form>
     </section>
   </main>
 
-  <!-- Modulo footer caricato dinamicamente -->
-  <div id="footer"></div>
+  <footer class="footer">
+    <p>&copy; 2025 Gestione Codici Prodotto</p>
+  </footer>
 
-  <script src="scripts/app.js"></script>
   <script src="scripts/login.js"></script>
 </body>
 </html>
