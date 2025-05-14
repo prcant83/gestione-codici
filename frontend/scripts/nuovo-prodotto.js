@@ -42,6 +42,18 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('select, input').forEach(el => {
     el.addEventListener('input', aggiornaCodice);
   });
+
+  // Intercetta submit
+  const form = document.getElementById('prodottoForm');
+  if (form) {
+    form.addEventListener('submit', e => {
+      const codiceGenerato = document.getElementById('codiceGenerato').textContent;
+      if (!codiceGenerato || codiceGenerato === '-') {
+        e.preventDefault();
+        alert('Codice non valido. Compila tutti i campi.');
+      }
+    });
+  }
 });
 
 function aggiungiOpzione(campo) {
