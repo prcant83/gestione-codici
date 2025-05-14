@@ -16,7 +16,7 @@
   </header>
 
   <main class="main">
-    <form action="/api/nuovo-prodotto" method="POST" class="form-box">
+    <form action="/api/nuovo-prodotto" method="POST" class="form-box" id="prodottoForm">
       <h2>Dati Prodotto (compilati da Andrea D'Onofrio)</h2>
 
       <label for="linea">Linea</label>
@@ -49,14 +49,22 @@
         <button type="button" onclick="aggiungiOpzione('tipologia')">+</button>
       </div>
 
-      <label for="confezione">Confezione</label>
+      <label for="categoria">Categoria</label>
       <div class="field-with-button">
-        <select name="confezione" id="confezione" required></select>
-        <button type="button" onclick="aggiungiOpzione('confezione')">+</button>
+        <select name="categoria" id="categoria" required></select>
+        <button type="button" onclick="aggiungiOpzione('categoria')">+</button>
+      </div>
+
+      <label for="tipo_contenitore">Tipo Contenitore</label>
+      <div class="field-with-button">
+        <select name="tipo_contenitore" id="tipo_contenitore" required></select>
+        <button type="button" onclick="aggiungiOpzione('tipo_contenitore')">+</button>
       </div>
 
       <label for="codice_cliente">Codice Cliente (opzionale)</label>
-      <input type="text" name="codice_cliente" id="codice_cliente">
+      <input type="text" name="codice_cliente" id="codice_cliente" placeholder="Es. CLI123">
+
+      <p><strong>Codice Generato:</strong> <span id="codiceGenerato">-</span></p>
 
       <button type="submit">Salva Scheda Iniziale</button>
     </form>
