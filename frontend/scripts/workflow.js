@@ -2,6 +2,8 @@
 let ruoloUtente = null;
 let prodottiGlobali = [];
 let workflowGlobali = {};
+let paginaCorrente = 1;
+const perPagina = 10;
 
 fetch('/api/utente')
   .then(res => res.json())
@@ -31,8 +33,14 @@ function caricaDati() {
 }
 
 function setupFiltro() {
-  document.getElementById('filtroCodice').addEventListener('input', renderizzaWorkflow);
-  document.getElementById('soloNonCompletati').addEventListener('change', renderizzaWorkflow);
+  document.getElementById('filtroCodice').addEventListener('input', () => {
+    paginaCorrente = 1;
+    renderizzaWorkflow();
+  });
+  document.getElementById('soloNonCompletati').addEventListener('change', () => {
+    paginaCorrente = 1;
+    renderizzaWorkflow();
+  });
 }
 
 function renderizzaWorkflow() {
@@ -50,7 +58,11 @@ function renderizzaWorkflow() {
     return testoMatch && validatoMatch;
   });
 
-  prodottiFiltrati.forEach(prodotto => {
+  const totalePagine = Math.ceil(prodottiFiltrati.length / perPagina);
+  const start = (paginaCorrente - 1) * perPagina;
+  const visibili = prodottiFiltrati.slice(start, start + perPagina);
+
+  visibili.forEach(prodotto => {
     const wrapper = document.createElement('div');
     wrapper.className = 'workflow-box';
 
@@ -87,6 +99,32 @@ function renderizzaWorkflow() {
 
     container.appendChild(wrapper);
   });
+
+  if (totalePagine > 1) {
+    const paginazione = document.createElement('div');
+    paginazione.style.textAlign = 'center';
+    paginazione.style.marginTop = '2rem';
+
+    if (paginaCorrente > 1) {
+      const prev = document.createElement('button');
+      prev.textContent = '← Pagina precedente';
+      prev.onclick = () => { paginaCorrente--; renderizzaWorkflow(); };
+      paginazione.appendChild(prev);
+    }
+
+    const span = document.createElement('span');
+    span.textContent = ` Pagina ${paginaCorrente} di ${totalePagine} `;
+    paginazione.appendChild(span);
+
+    if (paginaCorrente < totalePagine) {
+      const next = document.createElement('button');
+      next.textContent = 'Pagina successiva →';
+      next.onclick = () => { paginaCorrente++; renderizzaWorkflow(); };
+      paginazione.appendChild(next);
+    }
+
+    container.appendChild(paginazione);
+  }
 }
 
 function aggiornaWorkflow(idProdotto, ruolo) {
