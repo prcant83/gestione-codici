@@ -53,7 +53,6 @@ router.post('/', async (req, res) => {
       codiceProdotto += '-' + codice_cliente.trim();
     }
 
-    // Creazione tabella prodotti se non esiste
     db.run(`CREATE TABLE IF NOT EXISTS prodotti (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       linea TEXT, stabilimento TEXT, contenitore TEXT,
@@ -62,7 +61,6 @@ router.post('/', async (req, res) => {
       data_creazione TEXT DEFAULT CURRENT_TIMESTAMP
     )`);
 
-    // Salvataggio nel database
     const query = `INSERT INTO prodotti (
       linea, stabilimento, contenitore, formato,
       tipologia, categoria, tipo_contenitore,
@@ -80,10 +78,21 @@ router.post('/', async (req, res) => {
       codice_cliente || null,
       codiceProdotto
     ], function (err) {
-      if (err) return res.status(500).json({ error: err.message });
+      if (err) {
+        if (err.message.includes('UNIQUE constraint failed')) {
+          return res.status(400).json({ error: 'Codice prodotto già esistente.' });
+        }
+        return res.status(500).json({ error: err.message });
+      }
+
+      const idProdotto = this.lastID;
+
+      db.run(`INSERT INTO workflow_prodotti (id_prodotto) VALUES (?)`, [idProdotto], function (err2) {
+        if (err2) console.error('Errore creazione workflow associato:', err2.message);
+      });
 
       res.json({
-        id: this.lastID,
+        id: idProdotto,
         codice_prodotto: codiceProdotto
       });
     });
