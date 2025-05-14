@@ -18,8 +18,12 @@ function getCodiceFromTable(tabella, codice) {
   });
 }
 
-// POST /api/nuovo-prodotto
+// POST /api/nuovo-prodotto — accessibile solo ad utenti autenticati (non viewer)
 router.post('/', async (req, res) => {
+  if (!req.session.user || req.session.user.ruolo === 'viewer') {
+    return res.status(403).json({ error: 'Accesso negato. Utente non autorizzato.' });
+  }
+
   const {
     linea,
     stabilimento,
