@@ -9,6 +9,7 @@ const opzioniRouter = require('./api/opzioni');
 const nuovoProdottoRouter = require('./api/nuovo-prodotto');
 const listaProdottiRouter = require('./api/lista-prodotti');
 const utenteRouter = require('./api/utente');
+const workflowRouter = require('./api/workflow');
 
 const app = express();
 const PORT = 3000;
@@ -66,6 +67,7 @@ app.use('/api/utente', utenteRouter);
 app.use('/api/opzioni', opzioniRouter);
 app.use('/api/nuovo-prodotto', nuovoProdottoRouter);
 app.use('/api/prodotti', listaProdottiRouter);
+app.use('/api/workflow', workflowRouter);
 
 // Test API
 app.get('/api/test', (req, res) => {
