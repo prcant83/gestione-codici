@@ -1,3 +1,4 @@
+// backend/setup-utenti.js
 const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcrypt');
 const path = require('path');
@@ -14,7 +15,7 @@ const utenti = [
 ];
 
 // Percorso corretto del database esistente
-const dbPath = path.resolve(__dirname, 'db/database.sqlite');
+const dbPath = path.resolve(__dirname, 'database.sqlite');
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     return console.error('❌ Errore apertura database:', err.message);
@@ -30,7 +31,7 @@ db.serialize(() => {
       username TEXT UNIQUE NOT NULL,
       email TEXT UNIQUE NOT NULL,
       password_hash TEXT NOT NULL,
-      ruolo TEXT NOT NULL
+      ruolo TEXT CHECK(ruolo IN ('admin','iniziale','distinte','ricette','contabilita','viewer')) NOT NULL
     )
   `, (err) => {
     if (err) return console.error('❌ Errore creazione tabella:', err.message);
@@ -39,7 +40,7 @@ db.serialize(() => {
 
     let inseriti = 0;
 
-    utenti.forEach((utente, index) => {
+    utenti.forEach((utente) => {
       bcrypt.hash(utente.password, 10, (err, hash) => {
         if (err) return console.error('❌ Errore hash:', err.message);
         stmt.run(utente.username, utente.email, hash, utente.ruolo, (err) => {
