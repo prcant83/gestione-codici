@@ -1,0 +1,68 @@
+<!-- frontend/utenti.html -->
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestione Utenti</title>
+  <link rel="stylesheet" href="/styles/style.css" />
+</head>
+<body>
+  <header class="header">
+    <h1>Gestione Utenti</h1>
+    <nav>
+      <a href="/dashboard.html">&larr; Torna alla Dashboard</a>
+    </nav>
+  </header>
+
+  <main class="main">
+    <section class="form-container">
+      <h2>Aggiungi o modifica utente</h2>
+      <form id="formUtente" class="form-box">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+
+        <label for="ruolo">Ruolo</label>
+        <select id="ruolo" name="ruolo" required>
+          <option value="admin">Admin</option>
+          <option value="iniziale">Iniziale</option>
+          <option value="grafica">Grafica</option>
+          <option value="distinte">Distinte</option>
+          <option value="ricette">Ricette</option>
+          <option value="contabilita">Contabilità</option>
+          <option value="viewer">Viewer</option>
+        </select>
+
+        <button type="submit">Salva Utente</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Elenco Utenti</h2>
+      <table class="table" id="tabellaUtenti">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Ruolo</th>
+            <th>Azioni</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2025 Gestione Codici Prodotto</p>
+  </footer>
+
+  <script src="/scripts/utenti.js"></script>
+</body>
+</html>
