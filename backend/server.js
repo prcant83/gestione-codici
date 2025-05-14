@@ -1,8 +1,9 @@
+
+// backend/server.js
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
-const jwt = require('jsonwebtoken');
 
 const { login } = require('./auth/auth');
 const opzioniRouter = require('./api/opzioni');
@@ -13,7 +14,6 @@ const workflowRouter = require('./api/workflow');
 
 const app = express();
 const PORT = 3000;
-const JWT_SECRET = 'supersegreto123';
 
 // Middleware base
 app.use(cors());
@@ -28,25 +28,10 @@ app.use(session({
 // Static frontend
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-// Middleware autenticazione sessione (per accesso classico a dashboard.html)
+// Middleware autenticazione
 function requireLogin(req, res, next) {
   if (!req.session.user) return res.redirect('/login.html');
   next();
-}
-
-// Middleware autenticazione token per API
-function verifyToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // formato: Bearer TOKEN
-
-  if (!token) return res.status(401).json({ message: 'Token mancante' });
-
-  jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ message: 'Token non valido' });
-
-    req.user = user;
-    next();
-  });
 }
 
 // Rotte frontend
@@ -58,7 +43,7 @@ app.get('/dashboard.html', requireLogin, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dashboard.html'));
 });
 
-// Autenticazione sessione classica (per compatibilità)
+// Autenticazione
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
@@ -74,25 +59,16 @@ app.post('/login', (req, res) => {
   });
 });
 
-// Logout sessione
 app.get('/logout', (req, res) => {
   req.session.destroy(() => res.redirect('/login.html'));
 });
 
-// ✅ Autenticazione via API con token JWT
-app.post('/api/login', (req, res) => {
-  const { username, password } = req.body;
-
-  // Usa la funzione login definita in auth.js
-  login({ body: { username, password } }, res);
-});
-
-// ✅ Rotte API protette da token
-app.use('/api/utente', verifyToken, utenteRouter);
-app.use('/api/opzioni', verifyToken, opzioniRouter);
-app.use('/api/nuovo-prodotto', verifyToken, nuovoProdottoRouter);
-app.use('/api/prodotti', verifyToken, listaProdottiRouter);
-app.use('/api/workflow', verifyToken, workflowRouter);
+// Rotte API
+app.use('/api/utente', utenteRouter);
+app.use('/api/opzioni', opzioniRouter);
+app.use('/api/nuovo-prodotto', nuovoProdottoRouter);
+app.use('/api/prodotti', listaProdottiRouter);
+app.use('/api/workflow', workflowRouter);
 
 // Test API
 app.get('/api/test', (req, res) => {
