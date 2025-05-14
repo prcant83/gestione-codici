@@ -9,6 +9,7 @@ fetch('/api/utente')
   .then(res => res.json())
   .then(user => {
     ruoloUtente = user.ruolo;
+    document.getElementById('soloNonCompletati').checked = true;
     caricaDati();
   })
   .catch(err => {
@@ -61,6 +62,12 @@ function renderizzaWorkflow() {
   const totalePagine = Math.ceil(prodottiFiltrati.length / perPagina);
   const start = (paginaCorrente - 1) * perPagina;
   const visibili = prodottiFiltrati.slice(start, start + perPagina);
+
+  // Conteggio
+  const info = document.createElement('p');
+  info.textContent = `Mostrati ${start + 1}–${Math.min(start + visibili.length, prodottiFiltrati.length)} di ${prodottiFiltrati.length}`;
+  info.style.marginBottom = '1rem';
+  container.appendChild(info);
 
   visibili.forEach(prodotto => {
     const wrapper = document.createElement('div');
