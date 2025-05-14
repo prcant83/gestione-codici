@@ -36,8 +36,12 @@ router.get('/:campo', (req, res) => {
   });
 });
 
-// ✅ POST /api/opzioni/:campo — Inserisce nuova opzione con descrizione e codice
+// ✅ POST /api/opzioni/:campo — Inserisce nuova opzione con descrizione e codice SOLO se admin
 router.post('/:campo', (req, res) => {
+  if (!req.session.user || req.session.user.ruolo !== 'admin') {
+    return res.status(403).json({ error: 'Accesso negato. Solo gli amministratori possono aggiungere opzioni.' });
+  }
+
   const campo = req.params.campo;
   const { descrizione, codice } = req.body;
 
