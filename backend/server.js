@@ -47,9 +47,11 @@ app.get('/dashboard.html', requireLogin, (req, res) => {
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
+  console.log('Tentativo login:', username); // LOG
+
   login(username, password, (err, user) => {
     if (err) {
-      console.error('Errore login:', err);
+      console.error('Errore login:', err); // LOG dettagliato
       return res.status(500).send('Errore interno');
     }
     if (!user) return res.status(401).send('Credenziali non valide');
@@ -58,6 +60,7 @@ app.post('/login', (req, res) => {
     res.redirect('/dashboard.html');
   });
 });
+
 
 app.get('/logout', (req, res) => {
   req.session.destroy(() => res.redirect('/login.html'));
