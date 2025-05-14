@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dati.forEach(opt => {
           const option = document.createElement('option');
           option.value = opt.codice;
-          option.textContent = opt.descrizione;
+          option.textContent = `${opt.codice} - ${opt.descrizione}`;
           select.appendChild(option);
         });
         aggiornaCodice();
@@ -29,20 +29,33 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function aggiungiOpzione(campo) {
-  const descrizione = prompt(`Inserisci nuova descrizione per ${campo}`);
+  const codice = prompt(`Inserisci il CODICE per ${campo} (es. VOL)`);
+  if (!codice || !/^[A-Z0-9]{1,10}$/.test(codice)) {
+    alert("Codice non valido. Usa solo lettere maiuscole o numeri, max 10 caratteri.");
+    return;
+  }
+
+  const descrizione = prompt(`Inserisci la DESCRIZIONE per ${campo}`);
   if (!descrizione) return;
+
+  // Check ruolo admin (frontend placeholder, da sostituire con check reale lato server/sessione)
+  const isAdmin = true; // Placeholder, va gestito dal backend con sessione
+  if (!isAdmin) {
+    alert("Solo l'amministratore può aggiungere nuove voci.");
+    return;
+  }
 
   fetch(`/api/opzioni/${campo}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ descrizione })
+    body: JSON.stringify({ codice, descrizione })
   })
     .then(res => res.json())
     .then(nuova => {
       const select = document.getElementById(campo);
       const option = document.createElement('option');
       option.value = nuova.codice;
-      option.textContent = nuova.descrizione;
+      option.textContent = `${nuova.codice} - ${nuova.descrizione}`;
       select.appendChild(option);
       select.value = nuova.codice;
       aggiornaCodice();
@@ -59,6 +72,11 @@ function aggiornaCodice() {
   const categoria = getVal('categoria');
   const tipoContenitore = getVal('tipo_contenitore');
   const cliente = document.getElementById('codice_cliente').value.trim();
+
+  if (cliente && !/^[0-9]+$/.test(cliente)) {
+    document.getElementById('codiceGenerato').textContent = 'Codice cliente non valido';
+    return;
+  }
 
   if (linea && stabilimento && contenitore && formato && tipologia && categoria && tipoContenitore) {
     let codice = `${linea}${stabilimento}${contenitore}${formato}${tipologia}${categoria}${tipoContenitore}`;
