@@ -1,5 +1,21 @@
 // frontend/scripts/nuovo-prodotto.js
+let isAdmin = false;
+
+// Al caricamento iniziale
 document.addEventListener('DOMContentLoaded', () => {
+  fetch('/api/utente')
+    .then(res => res.json())
+    .then(user => {
+      isAdmin = user.ruolo === 'admin';
+      if (!isAdmin) {
+        document.querySelectorAll('.field-with-button button').forEach(btn => btn.style.display = 'none');
+      }
+    })
+    .catch(err => {
+      console.warn('Utente non autenticato o errore fetch /api/utente:', err);
+      document.querySelectorAll('.field-with-button button').forEach(btn => btn.style.display = 'none');
+    });
+
   const campi = [
     'linea', 'stabilimento', 'contenitore', 'formato',
     'tipologia', 'categoria', 'tipo_contenitore'
@@ -29,6 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function aggiungiOpzione(campo) {
+  if (!isAdmin) {
+    alert("Solo l'amministratore può aggiungere nuove voci.");
+    return;
+  }
+
   const codice = prompt(`Inserisci il CODICE per ${campo} (es. VOL)`);
   if (!codice || !/^[A-Z0-9]{1,10}$/.test(codice)) {
     alert("Codice non valido. Usa solo lettere maiuscole o numeri, max 10 caratteri.");
@@ -37,13 +58,6 @@ function aggiungiOpzione(campo) {
 
   const descrizione = prompt(`Inserisci la DESCRIZIONE per ${campo}`);
   if (!descrizione) return;
-
-  // Check ruolo admin (frontend placeholder, da sostituire con check reale lato server/sessione)
-  const isAdmin = true; // Placeholder, va gestito dal backend con sessione
-  if (!isAdmin) {
-    alert("Solo l'amministratore può aggiungere nuove voci.");
-    return;
-  }
 
   fetch(`/api/opzioni/${campo}`, {
     method: 'POST',
