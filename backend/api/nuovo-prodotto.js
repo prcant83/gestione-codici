@@ -1,17 +1,18 @@
+// backend/api/nuovo-prodotto.js
 const express = require('express');
 const router = express.Router();
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-const dbPath = path.join(__dirname, '../database/database.sqlite');
+const dbPath = path.join(__dirname, '../database.sqlite');
 const db = new sqlite3.Database(dbPath);
 
-// Funzione per recuperare il codice tecnico da una tabella usando l'ID
-function getCodiceFromTable(tabella, id) {
+// Funzione per recuperare il codice tecnico da una tabella usando il codice (non ID numerico)
+function getCodiceFromTable(tabella, codice) {
   return new Promise((resolve, reject) => {
-    db.get(`SELECT codice FROM ${tabella} WHERE id = ?`, [id], (err, row) => {
+    db.get(`SELECT codice FROM ${tabella} WHERE codice = ?`, [codice], (err, row) => {
       if (err) return reject(err);
-      if (!row) return reject(new Error(`ID non trovato nella tabella ${tabella}`));
+      if (!row) return reject(new Error(`Codice non trovato nella tabella ${tabella}`));
       resolve(row.codice);
     });
   });
@@ -25,39 +26,44 @@ router.post('/', async (req, res) => {
     contenitore,
     formato,
     tipologia,
-    confezione,
+    categoria,
+    tipo_contenitore,
     codice_cliente
   } = req.body;
 
   try {
-    // Recupera codici tecnici dalle tabelle
+    // Recupera codici tecnici
     const codiceLinea = await getCodiceFromTable('linee', linea);
     const codiceStabilimento = await getCodiceFromTable('stabilimenti', stabilimento);
     const codiceContenitore = await getCodiceFromTable('contenitori', contenitore);
     const codiceFormato = await getCodiceFromTable('formati', formato);
     const codiceTipologia = await getCodiceFromTable('tipologie', tipologia);
-    const codiceConfezione = await getCodiceFromTable('confezioni', confezione);
+    const codiceCategoria = await getCodiceFromTable('categorie', categoria);
+    const codiceTipoContenitore = await getCodiceFromTable('tipo_contenitore', tipo_contenitore);
 
     // Generazione codice prodotto
     let codiceProdotto = codiceLinea + codiceStabilimento + codiceContenitore +
-                         codiceFormato + codiceTipologia + codiceConfezione;
+                         codiceFormato + codiceTipologia + codiceCategoria + codiceTipoContenitore;
 
     if (codice_cliente && codice_cliente.trim() !== '') {
       codiceProdotto += '-' + codice_cliente.trim();
     }
 
+    // Creazione tabella prodotti se non esiste
+    db.run(`CREATE TABLE IF NOT EXISTS prodotti (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      linea TEXT, stabilimento TEXT, contenitore TEXT,
+      formato TEXT, tipologia TEXT, categoria TEXT, tipo_contenitore TEXT,
+      codice_cliente TEXT, codice_prodotto TEXT UNIQUE,
+      data_creazione TEXT DEFAULT CURRENT_TIMESTAMP
+    )`);
+
     // Salvataggio nel database
-    const query = `
-      INSERT INTO prodotti (
-        id_linea,
-        id_stabilimento,
-        id_contenitore,
-        id_formato,
-        id_tipologia,
-        id_confezione,
-        codice_cliente
-      ) VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
+    const query = `INSERT INTO prodotti (
+      linea, stabilimento, contenitore, formato,
+      tipologia, categoria, tipo_contenitore,
+      codice_cliente, codice_prodotto
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     db.run(query, [
       linea,
@@ -65,8 +71,10 @@ router.post('/', async (req, res) => {
       contenitore,
       formato,
       tipologia,
-      confezione,
-      codice_cliente || null
+      categoria,
+      tipo_contenitore,
+      codice_cliente || null,
+      codiceProdotto
     ], function (err) {
       if (err) return res.status(500).json({ error: err.message });
 
