@@ -52,19 +52,31 @@ body {
 
 .workflow-row label {
   flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .workflow-row input[type="checkbox"] {
   transform: scale(1.3);
+  margin-right: 0.5rem;
 }
 
-.workflow-row input[type="checkbox"]:checked:enabled {
-  outline: 2px solid #4caf50;
+.workflow-row input[type="checkbox"]:checked:enabled::after {
+  content: "✅";
+  margin-left: 0.5rem;
 }
 
-.workflow-row input[type="checkbox"]:disabled {
+.workflow-row input[type="checkbox"]:not(:checked):enabled::after {
+  content: "⏳";
+  margin-left: 0.5rem;
   opacity: 0.5;
-  cursor: not-allowed;
+}
+
+.workflow-row input[type="checkbox"]:disabled::after {
+  content: "❌";
+  margin-left: 0.5rem;
+  opacity: 0.4;
 }
 
 button {
