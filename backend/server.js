@@ -1,3 +1,4 @@
+// backend/server.js
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -7,7 +8,6 @@ const { login } = require('./auth/auth');
 const opzioniRouter = require('./api/opzioni');
 const nuovoProdottoRouter = require('./api/nuovo-prodotto');
 const listaProdottiRouter = require('./api/lista-prodotti');
-
 
 const app = express();
 const PORT = 3000;
