@@ -3,13 +3,14 @@ let ruoloUtente = null;
 let prodottiGlobali = [];
 let workflowGlobali = {};
 let paginaCorrente = 1;
-const perPagina = 10;
+let perPagina = 10;
 
 fetch('/api/utente')
   .then(res => res.json())
   .then(user => {
     ruoloUtente = user.ruolo;
     document.getElementById('soloNonCompletati').checked = true;
+    setupFiltro();
     caricaDati();
   })
   .catch(err => {
@@ -28,7 +29,6 @@ function caricaDati() {
           workflowGlobali[p.id] = workflows[i];
         });
         renderizzaWorkflow();
-        setupFiltro();
       });
     });
 }
@@ -42,6 +42,20 @@ function setupFiltro() {
     paginaCorrente = 1;
     renderizzaWorkflow();
   });
+  const perPageSelect = document.createElement('select');
+  [10, 20, 50].forEach(num => {
+    const option = document.createElement('option');
+    option.value = num;
+    option.textContent = `Mostra ${num}`;
+    if (num === perPagina) option.selected = true;
+    perPageSelect.appendChild(option);
+  });
+  perPageSelect.addEventListener('change', e => {
+    perPagina = parseInt(e.target.value);
+    paginaCorrente = 1;
+    renderizzaWorkflow();
+  });
+  document.querySelector('.filtro-ricerca').appendChild(perPageSelect);
 }
 
 function renderizzaWorkflow() {
@@ -63,7 +77,6 @@ function renderizzaWorkflow() {
   const start = (paginaCorrente - 1) * perPagina;
   const visibili = prodottiFiltrati.slice(start, start + perPagina);
 
-  // Conteggio
   const info = document.createElement('p');
   info.textContent = `Mostrati ${start + 1}–${Math.min(start + visibili.length, prodottiFiltrati.length)} di ${prodottiFiltrati.length}`;
   info.style.marginBottom = '1rem';
