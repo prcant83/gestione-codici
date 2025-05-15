@@ -33,7 +33,7 @@ function caricaDati() {
       );
       Promise.all(richieste).then(workflows => {
         prodotti.forEach((p, i) => {
-          console.log(`workflow per prodotto ID ${p.id}:`, workflows[i]);
+          console.log(`Prodotto ID ${p.id} - ${p.codice_prodotto}:`, workflows[i]);
           workflowGlobali[p.id] = workflows[i];
         });
         renderizzaWorkflow();
@@ -95,7 +95,7 @@ function renderizzaWorkflow() {
     wrapper.className = 'workflow-box';
 
     const titolo = document.createElement('h3');
-    titolo.textContent = prodotto.codice_prodotto;
+    titolo.textContent = `${prodotto.codice_prodotto} (ID ${prodotto.id})`;
     wrapper.appendChild(titolo);
 
     const workflow = workflowGlobali[prodotto.id];
