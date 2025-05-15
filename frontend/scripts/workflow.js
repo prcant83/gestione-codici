@@ -75,8 +75,8 @@ function renderizzaWorkflow() {
 
   const prodottiFiltrati = prodottiGlobali.filter(p => {
     const workflow = workflowGlobali[p.id];
-    if (!workflow) return false;
     const testoMatch = p.codice_prodotto.toLowerCase().includes(filtroTesto);
+    if (!workflow) return testoMatch; // Mostra prodotti senza workflow come avviso
     const validatoMatch = soloNonValidati ? workflow.validato_finale === 0 : true;
     return testoMatch && validatoMatch;
   });
@@ -99,6 +99,15 @@ function renderizzaWorkflow() {
     wrapper.appendChild(titolo);
 
     const workflow = workflowGlobali[prodotto.id];
+    if (!workflow) {
+      const errore = document.createElement('p');
+      errore.textContent = '⚠️ Nessun workflow associato a questo prodotto.';
+      errore.style.color = 'red';
+      wrapper.appendChild(errore);
+      container.appendChild(wrapper);
+      return;
+    }
+
     const reparti = [
       { campo: 'grafica_ok', label: 'Grafica', ruolo: 'grafica' },
       { campo: 'distinte_ok', label: 'Distinte', ruolo: 'distinte' },
