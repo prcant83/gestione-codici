@@ -23,9 +23,17 @@ function caricaDati() {
     .then(res => res.json())
     .then(prodotti => {
       prodottiGlobali = prodotti;
-      const richieste = prodotti.map(p => fetch(`/api/workflow/${p.id}`).then(res => res.json()));
+      const richieste = prodotti.map(p =>
+        fetch(`/api/workflow/${p.id}`)
+          .then(res => res.ok ? res.json() : null)
+          .catch(err => {
+            console.warn(`Errore fetch workflow per prodotto ${p.id}:`, err);
+            return null;
+          })
+      );
       Promise.all(richieste).then(workflows => {
         prodotti.forEach((p, i) => {
+          console.log(`workflow per prodotto ID ${p.id}:`, workflows[i]);
           workflowGlobali[p.id] = workflows[i];
         });
         renderizzaWorkflow();
