@@ -76,7 +76,7 @@ function renderizzaWorkflow() {
   const prodottiFiltrati = prodottiGlobali.filter(p => {
     const workflow = workflowGlobali[p.id];
     const testoMatch = p.codice_prodotto.toLowerCase().includes(filtroTesto);
-    if (!workflow) return testoMatch; // Mostra prodotti senza workflow come avviso
+    if (!workflow) return true; // mostra sempre anche quelli senza workflow
     const validatoMatch = soloNonValidati ? workflow.validato_finale === 0 : true;
     return testoMatch && validatoMatch;
   });
